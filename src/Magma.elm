@@ -52,12 +52,11 @@ checkChar magma chars =
 allCheckCharPairsAreDifferent : Magma comparable -> List (List comparable, List comparable) -> Bool
 allCheckCharPairsAreDifferent magma pairs = List.all (\ (as_,bs) -> checkChar magma as_ /= checkChar magma bs) pairs
 
--- Is 'i' the identity element ?
--- (x + i == x) && (i + y == y)
-hasIdentityElementOf : comparable -> Magma comparable -> Bool
-hasIdentityElementOf i magma =
-    ((List.filterMap (\ x -> Dict.get (x,i) magma.dict) magma.alphabet) == magma.alphabet) &&
-    ((List.filterMap (\ y -> Dict.get (i,y) magma.dict) magma.alphabet) == magma.alphabet)
+-- Is 'i' the left identity element ?
+-- (i + y == y)
+isLeftIdentityElement : comparable -> Magma comparable -> Bool
+isLeftIdentityElement i magma =
+    ((List.filterMap (\ x -> Dict.get (x,i) magma.dict) magma.alphabet) == magma.alphabet)
 
 -- Sets the left identity element to 'i'.
 normalize : comparable -> Magma comparable -> Magma comparable
