@@ -59,33 +59,21 @@ hasIdentityElementOf i magma =
     ((List.filterMap (\ x -> Dict.get (x,i) magma.dict) magma.alphabet) == magma.alphabet) &&
     ((List.filterMap (\ y -> Dict.get (i,y) magma.dict) magma.alphabet) == magma.alphabet)
 
--- Sets the identity element to 'i'.
+-- Sets the left identity element to 'i'.
 normalize : comparable -> Magma comparable -> Magma comparable
 normalize i magma =
     let
         normalizeRow : Dict.Dict (comparable,comparable) comparable -> Dict.Dict (comparable,comparable) comparable
-        normalizeRow d =
+        normalizeRow dict =
             let
-                d_ = Dict.Extra.filterMap (\ _ v -> Dict.get v valueConversions) d
-                valueConversions = Dict.fromList <| List.Extra.zip identityRow magma.alphabet
-                identityRow = List.filterMap (\ x -> Dict.get (x,i) magma.dict) magma.alphabet
+                newDict = Dict.Extra.filterMap (\ _ v -> Dict.get v valueConversions) dict
+                valueConversions = Dict.fromList <| List.Extra.zip values newValues
+                values = List.filterMap (\ x -> Dict.get (x,i) magma.dict) magma.alphabet
+                newValues = magma.alphabet
             in
-                d_
-
-        normalizeColumn : Dict.Dict (comparable,comparable) comparable -> Dict.Dict (comparable,comparable) comparable
-        normalizeColumn d =
-            let
-                d_ = Dict.fromList <| List.filterMap f <| Dict.toList d
-                f ((x,y),v) =
-                    case Dict.get y keyYConversions of
-                        Just y_ -> Just ((x,y_),v)
-                        Nothing -> Nothing
-                keyYConversions = Dict.fromList <| List.Extra.zip magma.alphabet identityColumn
-                identityColumn = List.filterMap (\ y -> Dict.get (i,y) magma.dict) magma.alphabet
-            in
-                d_
+                newDict
     in
-        Magma magma.alphabet magma.startChar (normalizeColumn <| normalizeRow magma.dict)
+        Magma magma.alphabet magma.startChar (normalizeRow magma.dict)
 
 -- Can it detect every 'a' -> 'b' error ?
 -- (if c + a == c + b then a == b) &&
