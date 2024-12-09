@@ -28,17 +28,6 @@ checkChar magma chars =
 
 allCheckCharPairsAreDifferent : Magma comparable -> List (List comparable, List comparable) -> Bool
 allCheckCharPairsAreDifferent magma pairs = List.all (\ (as_,bs) -> checkChar magma as_ /= checkChar magma bs) pairs
---allCheckCharPairsAreDifferent magma pairs =
---    let
---        f (as_,bs) =
---            let
---                r = checkChar magma as_ /= checkChar magma bs
---            in
---                if r
---                then r
---                else Debug.log (String.join " " [Debug.toString as_, Debug.toString bs, Debug.toString <| checkChar magma as_]) r
---    in
---        List.all identity <| List.map f pairs
 
 -- Is 'i' the identity element ?
 -- (x + i == x) && (i + y == y)
