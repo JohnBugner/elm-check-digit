@@ -7,7 +7,7 @@ import List.Extra
 type alias Magma a =
     { alphabet : List a
     , startChar : a
-    , d : Dict.Dict (a,a) a
+    , dict : Dict.Dict (a,a) a
     }
 
 range2d : (Int, Int) -> List (Int,Int)
@@ -31,7 +31,7 @@ toString magma =
         List.Extra.greedyGroupsOf (List.length magma.alphabet) <|
         List.map String.fromInt <|
         List.filterMap identity <|
-        List.map (\ xy -> Dict.get xy magma.d) xys
+        List.map (\ xy -> Dict.get xy magma.dict) xys
 
 fromListToDict : List (List a) -> Dict.Dict (Int,Int) a
 fromListToDict ll =
@@ -44,7 +44,7 @@ checkChar magma chars =
     let
         f x my =
             case my of
-                Just y -> Dict.get (x,y) magma.d
+                Just y -> Dict.get (x,y) magma.dict
                 Nothing -> Nothing
     in
         List.foldl f (Just magma.startChar) chars
@@ -56,8 +56,8 @@ allCheckCharPairsAreDifferent magma pairs = List.all (\ (as_,bs) -> checkChar ma
 -- (x + i == x) && (i + y == y)
 hasIdentityElementOf : comparable -> Magma comparable -> Bool
 hasIdentityElementOf i magma =
-    ((List.filterMap (\ x -> Dict.get (x,i) magma.d) magma.alphabet) == magma.alphabet) &&
-    ((List.filterMap (\ y -> Dict.get (i,y) magma.d) magma.alphabet) == magma.alphabet)
+    ((List.filterMap (\ x -> Dict.get (x,i) magma.dict) magma.alphabet) == magma.alphabet) &&
+    ((List.filterMap (\ y -> Dict.get (i,y) magma.dict) magma.alphabet) == magma.alphabet)
 
 -- Sets the identity element to 'i'.
 normalize : comparable -> Magma comparable -> Magma comparable
@@ -68,7 +68,7 @@ normalize i magma =
             let
                 d_ = Dict.Extra.filterMap (\ _ v -> Dict.get v valueConversions) d
                 valueConversions = Dict.fromList <| List.Extra.zip identityRow magma.alphabet
-                identityRow = List.filterMap (\ x -> Dict.get (x,i) magma.d) magma.alphabet
+                identityRow = List.filterMap (\ x -> Dict.get (x,i) magma.dict) magma.alphabet
             in
                 d_
 
@@ -81,11 +81,11 @@ normalize i magma =
                         Just y_ -> Just ((x,y_),v)
                         Nothing -> Nothing
                 keyYConversions = Dict.fromList <| List.Extra.zip magma.alphabet identityColumn
-                identityColumn = List.filterMap (\ y -> Dict.get (i,y) magma.d) magma.alphabet
+                identityColumn = List.filterMap (\ y -> Dict.get (i,y) magma.dict) magma.alphabet
             in
                 d_
     in
-        Magma magma.alphabet magma.startChar (normalizeColumn <| normalizeRow magma.d)
+        Magma magma.alphabet magma.startChar (normalizeColumn <| normalizeRow magma.dict)
 
 -- Can it detect every 'a' -> 'b' error ?
 -- (if c + a == c + b then a == b) &&
