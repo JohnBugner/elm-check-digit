@@ -10,6 +10,29 @@ type alias Magma a =
     , d : Dict.Dict (a,a) a
     }
 
+range2d : (Int, Int) -> List (Int,Int)
+range2d (w,h) =
+    let
+        f xys =
+            case xys of
+                y :: x :: _ -> Just (x,y)
+                _ -> Nothing
+    in
+        List.filterMap f <|
+        List.Extra.cartesianProduct [List.range 0 w, List.range 0 h]
+
+toString : Magma Int -> String
+toString magma =
+    let
+        xys = range2d (9,9)
+    in
+        String.join "\n" <|
+        List.map (String.join " ") <|
+        List.Extra.greedyGroupsOf (List.length magma.alphabet) <|
+        List.map String.fromInt <|
+        List.filterMap identity <|
+        List.map (\ xy -> Dict.get xy magma.d) xys
+
 fromListToDict : List (List a) -> Dict.Dict (Int,Int) a
 fromListToDict ll =
     Dict.fromList <|
