@@ -98,7 +98,7 @@ isTotallyAntiSymmetric magma =
         allCheckCharPairsAreDifferent magma (pairs ++ triples)
 
 -- Can it detect errors where "-teen" (like in 13) is misheard as "-ty" (like in 30) ?
--- Can it detect every '1v' -> 'a0' error ?, where 'a' is between 3 and 9 inclusive.
+-- Can it detect every '1a' -> 'a0' error ?, where 'a' is between 3 and 9 inclusive.
 -- (if 1 + a == a + 0 then False) &&
 -- (if c + 1 + a == c + a + 0 then False)
 germanicPairsAreTotallyAntiSymmetric : Magma Int -> Bool
